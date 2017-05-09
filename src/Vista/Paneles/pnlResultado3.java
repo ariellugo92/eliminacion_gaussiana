@@ -2,6 +2,7 @@ package Vista.Paneles;
 
 import Controladores.metodosGaussControlador;
 import Pojos.Resultados;
+import Vista.frmGauss;
 
 /**
  *
@@ -10,6 +11,7 @@ import Pojos.Resultados;
 public class pnlResultado3 extends javax.swing.JPanel {
 
     metodosGaussControlador mgc = new metodosGaussControlador();
+    private frmGauss frmPadre;
     
     public pnlResultado3() {
         initComponents();
@@ -17,7 +19,12 @@ public class pnlResultado3 extends javax.swing.JPanel {
     
     public void setResultados(float [][] arr_matriz, int tam){
         Resultados res = mgc.resultados(arr_matriz, tam);
+        this.frmPadre.setResultIncognitas(res.getIncognitas());
         txtResultados.setText(res.getTexto());
+    }
+    
+    public void setFrmPadre(frmGauss frm){
+        this.frmPadre = frm;
     }
 
     /**

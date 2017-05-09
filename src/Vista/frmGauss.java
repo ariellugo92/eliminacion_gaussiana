@@ -3,6 +3,7 @@ package Vista;
 import Vista.Paneles.pnlResultado1;
 import Vista.Paneles.pnlResultado2;
 import Vista.Paneles.pnlResultado3;
+import Vista.Paneles.pnlResultado4;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 
@@ -18,7 +19,9 @@ public class frmGauss extends javax.swing.JFrame {
     private float[][] arr_matriz;
     private boolean flag_llenado = false;
     private boolean flag_spiner_celda = false;
-    public float [][] matriz_result_transform;
+    private float [][] matriz_result_transform;
+    private float [] result_incognitas;
+    private float [][] matriz_original_temp;
 
     public frmGauss() {
         initComponents();
@@ -28,6 +31,10 @@ public class frmGauss extends javax.swing.JFrame {
     public void setMatrizResultTransform(float [][] arr_matriz){
         this.matriz_result_transform = this.arr_matriz;
     }
+    
+    public void setResultIncognitas(float [] arr_incog){
+        this.result_incognitas = arr_incog;
+    }
 
     // metodo para rellenar la matriz
     private void rrellenandoMatriz() {
@@ -36,9 +43,11 @@ public class frmGauss extends javax.swing.JFrame {
             if (this.pos_x == 1 && this.pos_y == 1 && !this.flag_llenado) {
                 // esto es cuando se inicie el programa
                 this.arr_matriz = new float[(this.cant_incognitas)][(this.cant_incognitas + 1)];
+                this.matriz_original_temp = new float[this.cant_incognitas][(this.cant_incognitas + 1)];
                 for (int i = 0; i < this.cant_incognitas; i++) {
                     for (int j = 0; j < (this.cant_incognitas + 1); j++) {
                         this.arr_matriz[i][j] = 0;
+                        this.matriz_original_temp[i][j] = 0;
                     }
                 }
             }
@@ -47,6 +56,7 @@ public class frmGauss extends javax.swing.JFrame {
             for (int i = 0; i < this.cant_incognitas; i++) {
                 for (int j = 0; j < (this.cant_incognitas + 1); j++) {
                     float valor = this.arr_matriz[i][j];
+                    
                     if (j == (this.cant_incognitas - 1)) {
                         if (i == (this.pos_x - 1) && j == (this.pos_y - 1)) {
                             texto += "<span style='color:red;'>" + valor + "X" + (j + 1) + "</span>";
@@ -132,6 +142,7 @@ public class frmGauss extends javax.swing.JFrame {
         if (!txtValorPos.getText().isEmpty()) {
             float valor_num = (float) Float.parseFloat(txtValorPos.getText());
             this.arr_matriz[(this.pos_x - 1)][(this.pos_y - 1)] = valor_num;
+            this.matriz_original_temp[(this.pos_x - 1)][(this.pos_y - 1)] = valor_num;
             this.rrellenandoMatriz();
 
             if (this.spinerIncognitas.isEnabled()) {
@@ -158,8 +169,13 @@ public class frmGauss extends javax.swing.JFrame {
                 this.tabebResultados.addTab("Transformaciones Elementales", pnlR2);
                 // agregando el panel de los resultados
                 pnlResultado3 pnlR3 = new pnlResultado3();
+                pnlR3.setFrmPadre(this);
                 pnlR3.setResultados(this.matriz_result_transform, this.cant_incognitas);
                 this.tabebResultados.addTab("Resultados", pnlR3);
+                // agregando el panel de comprobacion
+                pnlResultado4 pnlR4 = new pnlResultado4();
+                pnlR4.setMostrarResultados(this.matriz_original_temp, this.result_incognitas, this.cant_incognitas);
+                this.tabebResultados.addTab("Comprobando", pnlR4);
                 this.btnCalcular.setText("Cancelar");
                 break;
 
@@ -207,6 +223,7 @@ public class frmGauss extends javax.swing.JFrame {
         tabebResultados = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -380,7 +397,7 @@ public class frmGauss extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
-        setSize(new java.awt.Dimension(997, 585));
+        setSize(new java.awt.Dimension(981, 546));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -433,7 +450,7 @@ public class frmGauss extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }

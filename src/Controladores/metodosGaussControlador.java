@@ -92,8 +92,10 @@ public class metodosGaussControlador {
                     // si el valor que esta debajo es distinto de cero
                     // entonces cambiar la fila encontrada por la fila que tiene el valor de cero
                     for (int j = 0; j < (tam + 1); j++) {
-                        matriz[i][j] = matriz[pos][j];
-                        matriz[pos][j] = matriz_temp[i][j];
+                        float pos_orig = matriz_temp[pos][j];
+                        float pos_camb = matriz_temp[i][j];
+                        matriz[pos][j] = pos_camb;
+                        matriz[i][j] = pos_orig;
                     }
                     encontro = "encontro";
                     pos_j = i;
@@ -103,7 +105,9 @@ public class metodosGaussControlador {
             encontro = (encontro.isEmpty()) ? "no encontro" : "encontro";
         }
 
-        encontro = "sin cambio";
+        encontro = (!encontro.isEmpty() || !encontro.equals("encontro") || !encontro.equals("no encontro")) ? 
+                    encontro : "sin cambio";
+        
         DiagonalCero dc = new DiagonalCero();
         dc.setArr(matriz);
         dc.setPos_orig(pos);
@@ -143,6 +147,7 @@ public class metodosGaussControlador {
             // recorriendo la diagonal principal
             DiagonalCero dc = this.comprobadaQueDiagonalNoTieneCero(arr_nums, i, num_incog);
             String cambio = dc.getCambio();
+            arr_nums = dc.getArr();
 
             // quiere decir que el sistema tiene infinitas soluciones
             if (cambio.equals("no encontro")) {
@@ -152,14 +157,13 @@ public class metodosGaussControlador {
 
             // si encontro quiere decir que hizo un cambio de filas
             if (cambio.equals("encontro")) {
-                texto += "Transformacion dado que el pivote es 0 f" + dc.getPos_orig() + " <> " + dc.getPos_camb() + "\n\n";
+                texto += "Transformacion dado que el pivote es 0\t f" + dc.getPos_orig() + " <> f" + dc.getPos_camb() + "\n\n";
                 texto += getMatrizAumentada(dc.getArr(), num_incog, false);
-                arr_nums = dc.getArr();
             }
 
             // si el pivote en el que estemos no es uno, lo transformamos a uno
             float valor_pivote = arr_nums[i][i];
-            if (valor_pivote != 1f) {
+            if (valor_pivote != 1f && valor_pivote != 0f) {
                 texto += "Transformacion dado que el pivote es distinto de uno, f" + i + " > "
                         + valor_pivote + "/f" + i + "\n\n";
                 arr_nums = getMatrizPivoteCambioadoUno(arr_nums, i, num_incog, valor_pivote);
@@ -187,7 +191,7 @@ public class metodosGaussControlador {
                         arr_nums[j][k] = valor_positivo;
                     }
                     texto += "\tf" + (j + 1) + " > " + valor_abajo_pivote + "f" + (i + 1)
-                            + " - f" + (j + 1);
+                            + " - f" + (j + 1) + "\n";
                 }
             }
 
@@ -238,6 +242,13 @@ public class metodosGaussControlador {
         return vals;
     }
 
+    /***
+     * Metod para obtener la matriz resultante y el valor de las incognitas
+     * 
+     * @param arr_nums Matriz resultante de las transformaciones elementales
+     * @param tam Numero de incognitas del sistema de ecuaciones
+     * @return Devuelve un objeto que contiene el texto a mostrar y un arregle de float con las incognitas
+     */
     public Resultados resultados(float[][] arr_nums, int tam) {
         String texto = "Sistema Equivalente \n\n";
 
@@ -255,6 +266,40 @@ public class metodosGaussControlador {
         res.setIncognitas(incognitas);
 
         return res;
+    }
+    
+    /***
+     * Metodo para comprobar que las incognitas son las correctas
+     * 
+     * @param sistema_ecuaciones Sistema de ecuaciones original
+     * @param valor_incognitas Valor encontrado de las incognitas
+     * @param tam Numero de incognitas
+     * @return 
+     */
+    public String getTextoComprobado(float [][] sistema_ecuaciones, float [] valor_incognitas, int tam){
+        String texto = "";
+        
+        for (int i = 0; i < tam; i++) {
+            texto += "Comprobando sustituyendo el valor de las incognitas en la fila " + (i + 1) + "\n\n";
+            float valor_der = 0f;
+            int k = (tam - 1);
+            for (int j = 0; j < tam; j++) {
+                float valor = sistema_ecuaciones[i][j];
+                float valor_incognita = valor_incognitas[k];
+                float valor_result = valor * valor_incognita;
+                
+                texto += (valor_result >= 0) ? 
+                        "+ " + valor + "(" + valor_incognita + ") " : 
+                        "- " + (Math.abs(valor)) + "(" + valor_incognita + ") ";
+                valor_der += valor_result;
+                k--;
+            }
+            
+            texto += " = " + sistema_ecuaciones[i][tam] + "\n";
+            texto += valor_der + " = " + sistema_ecuaciones[i][tam] + "\n\n";
+        }
+        
+        return texto;
     }
 
 }
