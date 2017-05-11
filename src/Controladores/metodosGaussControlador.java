@@ -121,7 +121,7 @@ public class metodosGaussControlador {
     private float[][] getMatrizPivoteCambioadoUno(float[][] matriz, int pos, int tam, float num_divisor) {
         for (int i = pos; i < (tam + 1); i++) {
             float valor = matriz[pos][i];
-            float valor_nuevo = (num_divisor / valor);
+            float valor_nuevo = (valor / num_divisor);
             matriz[pos][i] = valor_nuevo;
         }
 
@@ -129,6 +129,7 @@ public class metodosGaussControlador {
     }
 
     public boolean getEstado = false;
+    public int fila_problem = -1;
 
     /**
      * *
@@ -141,7 +142,7 @@ public class metodosGaussControlador {
      * texto a mostrar
      */
     public TransformacionElemental getTransformacionesElementales(float[][] arr_nums, int num_incog) {
-        String texto = "";
+        String texto = "No ha sido necesario realizar transformaciones elementales";
 
         for (int i = 0; i < num_incog; i++) {
             // recorriendo la diagonal principal
@@ -151,7 +152,8 @@ public class metodosGaussControlador {
 
             // quiere decir que el sistema tiene infinitas soluciones
             if (cambio.equals("no encontro")) {
-                getEstado = true;
+                this.getEstado = true;
+                this.fila_problem = (i + 1);
                 return null;
             }
 

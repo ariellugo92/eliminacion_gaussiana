@@ -23,8 +23,21 @@ public class pnlResultado2 extends javax.swing.JPanel {
     
     public void setTransfomacionesElementales(float [][] arr_nums, int num_incog){
         TransformacionElemental te = mgc.getTransformacionesElementales(arr_nums, num_incog);
-        txtTransformaciones.setText(te.getTexto());
-        this.frmPadre.setMatrizResultTransform(te.getMatriz());
+        boolean flag_matriz = mgc.getEstado;
+        if (! flag_matriz) {
+            if(te.getTexto().length() > 58){
+                txtTransformaciones.setText(te.getTexto().substring(58, (te.getTexto().length() - 1)));
+            }else{
+                txtTransformaciones.setText(te.getTexto());
+            }
+            
+            this.frmPadre.setMatrizResultTransform(te.getMatriz());
+            return;
+        }
+        
+        int f = mgc.fila_problem;
+        this.frmPadre.setFilaProblem(f);
+        this.frmPadre.setFlagMatriz(flag_matriz);
     }
 
     /**
@@ -56,6 +69,7 @@ public class pnlResultado2 extends javax.swing.JPanel {
         add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
         txtTransformaciones.setColumns(20);
+        txtTransformaciones.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
         txtTransformaciones.setRows(5);
         jScrollPane2.setViewportView(txtTransformaciones);
 

@@ -48,6 +48,7 @@ public class pnlResultado4 extends javax.swing.JPanel {
         add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
         txtComprobando.setColumns(20);
+        txtComprobando.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
         txtComprobando.setRows(5);
         jScrollPane1.setViewportView(txtComprobando);
 

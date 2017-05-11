@@ -54,6 +54,7 @@ public class pnlResultado1 extends javax.swing.JPanel {
         add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
         txtMatrizResult.setColumns(20);
+        txtMatrizResult.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
         txtMatrizResult.setRows(5);
         jScrollPane2.setViewportView(txtMatrizResult);
 
